@@ -1,0 +1,9 @@
+# Visual Studio Code
+.vscore
+
+# JetBrains IDEs
+.idea
+
+# Python
+__pycache__
+*.py[cod]
