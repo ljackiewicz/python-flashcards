@@ -1,7 +1,7 @@
 import os
 import sqlite3
 
-DATABASE = 'example.db'
+DATABASE = 'data/example.db'
 
 
 def connect_db():
@@ -11,9 +11,11 @@ def connect_db():
 
 
 def init_db():
-    conn = connect_db()
-    with conn:
-        conn.execute("CREATE TABLE cards (front text, back text)")
+    if not os.path.exists(DATABASE):
+        conn = connect_db()
+        with open("data/schema.sql", "r") as file:
+            with conn:
+                conn.executescript(file.read())
 
 
 def query_db(query: str, args=()):
@@ -23,14 +25,12 @@ def query_db(query: str, args=()):
 
 
 def main():
-    # initialize database
-    if not os.path.exists(DATABASE):
-        init_db()
+    init_db()
 
-    cards = query_db("SELECT rowid, front, back FROM cards")
+    cards = query_db("SELECT id, front, back FROM cards")
 
     for card in cards:
-        print(card["rowid"], card["front"], card["back"])
+        print(card["id"], card["front"], card["back"])
 
 
 if __name__ == "__main__":
