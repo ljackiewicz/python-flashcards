@@ -12,13 +12,13 @@ def list_cards():
 def add_card(front, back):
     with Database() as db:
         db.execute("INSERT INTO cards (front, back) VALUES (?, ?)", front, back)
-        db.conn.commit()
+        db.commit()
 
 
 def remove_card(card_id):
     with Database() as db:
         db.execute("DELETE FROM cards WHERE id=?", card_id)
-        db.conn.commit()
+        db.commit()
 
 
 def main():

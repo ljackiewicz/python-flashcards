@@ -29,6 +29,12 @@ class Database(object):
         cur = self.conn.execute(sql, args)
         return cur
 
+    def commit(self) -> None:
+        self.conn.commit()
+
+    def close(self) -> None:
+        self.conn.close()
+
     def __enter__(self) -> "Database":
         return self
 
