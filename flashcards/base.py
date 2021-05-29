@@ -1,27 +1,28 @@
-from flashcards.database import query_db, init_db
+from flashcards.database import Database
 
 
 def list_cards():
-    query = "SELECT id, front, back FROM cards"
-    cards = query_db(query)
+    with Database() as db:
+        cards = db.execute("SELECT id, front, back FROM cards").fetchall()
 
     for card in cards:
         print(f"{card['id']}: {card['front']} - {card['back']}")
 
 
 def add_card(front, back):
-    query = "INSERT INTO cards (front, back) VALUES (?, ?)"
-    query_db(query, [front, back])
+    with Database() as db:
+        db.execute("INSERT INTO cards (front, back) VALUES (?, ?)", front, back)
+        db.conn.commit()
 
 
 def remove_card(card_id):
-    query = "DELETE FROM cards WHERE id=?"
-    query_db(query, [card_id])
+    with Database() as db:
+        db.execute("DELETE FROM cards WHERE id=?", card_id)
+        db.conn.commit()
 
 
 def main():
-    init_db()
-
+    print("Already created cards:")
     list_cards()
 
 
