@@ -11,7 +11,7 @@ def list_cards():
 
 def add_card(front, back):
     with Database() as db:
-        db.execute("INSERT INTO cards (front, back, deck_id) VALUES (?, ?, ?)", front, back, 1)
+        db.execute("INSERT INTO cards VALUES (NULL, ?, ?, ?)", front, back, 1)
         db.commit()
 
 
