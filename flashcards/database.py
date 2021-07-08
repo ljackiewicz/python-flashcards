@@ -1,42 +1,23 @@
-import os
-from sqlite3 import dbapi2 as sqlite
-from sqlite3 import Cursor
-from typing import Any
+from sqlalchemy import create_engine, Column, Integer, String
+from sqlalchemy.orm import sessionmaker, declarative_base
 
-DATABASE = 'data/example.db'
+DATABASE = "data/example.db"
+
+engine = create_engine(f"sqlite:///{DATABASE}")
+Session = sessionmaker(bind=engine)
+session = Session()
+Base = declarative_base()
 
 
-class Database(object):
-    DB_FILE = "data/example.db"
-    DB_SCHEMA_FILE = "data/schema.sql"
+class Card(Base):
+    __tablename__ = "cards"
 
-    def __init__(self) -> None:
-        schema = None
+    id = Column(Integer, primary_key=True)
+    front = Column(String, nullable=False)
+    back = Column(String, nullable=False)
 
-        if not os.path.exists(Database.DB_FILE):
-            with open(Database.DB_SCHEMA_FILE, "r") as file:
-                schema = file.read()
+    def __repr__(self):
+        return f"<Card(front='{self.front}', back='{self.back}')>"
 
-        self.conn = sqlite.connect(Database.DB_FILE)
-        self.conn.row_factory = sqlite.Row
-        self.cur = self.conn.cursor()
 
-        if schema:
-            self.conn.executescript(schema)
-            self.conn.commit()
-
-    def execute(self, sql: str, *args: Any) -> Cursor:
-        cur = self.conn.execute(sql, args)
-        return cur
-
-    def commit(self) -> None:
-        self.conn.commit()
-
-    def close(self) -> None:
-        self.conn.close()
-
-    def __enter__(self) -> "Database":
-        return self
-
-    def __exit__(self, *args: Any) -> None:
-        self.conn.close()
+Base.metadata.create_all(engine)
