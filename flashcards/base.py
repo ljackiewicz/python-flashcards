@@ -1,4 +1,4 @@
-from flashcards.database import session, Card, Deck
+from flashcards.database import session, Card, Deck, init_db
 
 
 def add_deck(name):
@@ -46,6 +46,7 @@ def list_cards():
 
 
 def main():
+    init_db()
     list_decks()
     list_cards()
 

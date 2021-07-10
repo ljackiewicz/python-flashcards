@@ -36,4 +36,10 @@ class Card(Base):
         return f"<Card(front='{self.front}', back='{self.back}')>"
 
 
-Base.metadata.create_all(engine)
+def init_db():
+    Base.metadata.drop_all(engine)
+    Base.metadata.create_all(engine)
+
+    default_deck = Deck(name="default")
+    session.add(default_deck)
+    session.commit()
